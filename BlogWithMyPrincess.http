@@ -1,0 +1,6 @@
+@BlogWithMyPrincess_HostAddress = http://localhost:5191
+
+GET {{BlogWithMyPrincess_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
