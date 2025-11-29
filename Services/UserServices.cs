@@ -14,20 +14,20 @@ public class UserServices : IUserServices
         _userRepository = userRepository;
     }
     
-    public async Task<bool> CreateUser(string username, string password, string email)
+    public async Task<User?> CreateUser(string username, string password, string email)
     {
         //Verificamos que no haga falta ningun dato
         if(string.IsNullOrWhiteSpace(username)||  
            string.IsNullOrWhiteSpace(password)||
-           string.IsNullOrWhiteSpace(email)) return false;
+           string.IsNullOrWhiteSpace(email)) return null;
         
         //Verificamos el correo sea validoo
         var checker = new EmailChecker(email);
 
         //Verificamos que no exista el correo en otra cuenta
-        if (!checker.IsValid)  return false;
+        if (!checker.IsValid)  return null;
         if (await _userRepository.ExistsByEmail(email))
-            return false;
+            return null;
         
         //Creamos al usuario
         User newUser = new User();
@@ -37,6 +37,15 @@ public class UserServices : IUserServices
         
         //Lo aguardamos en la base de datos
         return await _userRepository.CreateUser(newUser);   
+    }
+
+    public async Task<User?> LoginUser(string email, string password)
+    {
+        //Verificamos que no haga falta ningun dato
+        if(string.IsNullOrWhiteSpace(password)||
+           string.IsNullOrWhiteSpace(email)) return null;
+        return await _userRepository.LoginUser(email, password);
+
     }
 
     public async Task<User?> GetUserByEmail(string email)

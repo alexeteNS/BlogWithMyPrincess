@@ -16,14 +16,22 @@ public class UserRepository : IUserRepository
         _context = context;
     }
     
-    public async Task<bool> CreateUser(User? user)
+    public async Task<User?> CreateUser(User? user)
     {
-        if (user == null) return false;
+        if (user == null) return null;
         
         //Agregamos a la tabla al nuebvo usuario
         await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();
-        return true;
+        return user;
+    }
+
+    public async Task<User?> LoginUser(string email, string password)
+    {
+        var user = await GetUserByEmail(email);
+        if (user == null) return null;
+        if(user.isDeleted) return null;
+        return !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash) ? null : user;
     }
 
     public async Task<User?> GetUserByEmail(string email)

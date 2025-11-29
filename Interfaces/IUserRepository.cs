@@ -4,7 +4,8 @@ namespace BlogWithMyPrincess.Interfaces;
 
 public interface IUserRepository
 {
-    public Task<bool> CreateUser(User user);
+    public Task<User?> CreateUser(User user);
+    public Task<User?> LoginUser(string email, string password);
     public Task<User?> GetUserByEmail(string email);
     public Task<User?> GetUserByUId(int id);
     public Task<bool> UpdateEmail(int idUser, string email);

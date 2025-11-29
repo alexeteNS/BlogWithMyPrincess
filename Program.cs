@@ -1,5 +1,6 @@
 using BlogWithMyPrincess.Data.Context;
 using BlogWithMyPrincess.Data.Repositories;
+using BlogWithMyPrincess.Services;
 using BlogWithMyPrincess.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer;
@@ -11,6 +12,7 @@ builder.Services.AddScoped<IBlogDbContext>(provider =>
     provider.GetRequiredService<BlogDbContext>());
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICommentsRepository, CommentsRepository>();
+builder.Services.AddScoped<IUserServices, UserServices>();
 
 
 //Agregar CORS
