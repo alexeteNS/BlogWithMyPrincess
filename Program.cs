@@ -10,11 +10,10 @@ builder.Services.AddDbContext<BlogDbContext>(options => options.UseSqlServer(bui
 
 builder.Services.AddScoped<IBlogDbContext>(provider =>
     provider.GetRequiredService<BlogDbContext>());
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICommentsServices, CommentServices>();
 builder.Services.AddScoped<ICommentsRepository, CommentsRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserServices, UserServices>();
-
-
 //Agregar CORS
 builder.Services.AddCors((options =>
 {

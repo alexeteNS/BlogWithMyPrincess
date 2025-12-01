@@ -6,6 +6,7 @@ public class Comments
 {
     public int Id { get; set; }
     public string? Text { get; set; } = string.Empty;
+    public string? Image { get; set; }
     public DateTime DateCreated { get; set; } = DateTime.UtcNow;
     public Reaccion Reaccion { get; set; }
     

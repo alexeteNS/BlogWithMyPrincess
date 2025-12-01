@@ -4,6 +4,7 @@ using BlogWithMyPrincess.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogWithMyPrincess.Migrations
 {
     [DbContext(typeof(BlogDbContext))]
-    partial class BlogDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251130015428_semeolvido")]
+    partial class semeolvido
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,9 +41,6 @@ namespace BlogWithMyPrincess.Migrations
 
                     b.Property<int?>("IdPost")
                         .HasColumnType("int");
-
-                    b.Property<string>("Image")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Reaccion")
                         .HasColumnType("int");
@@ -70,12 +70,7 @@ namespace BlogWithMyPrincess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("userId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("userId");
 
                     b.ToTable("Posts");
                 });
@@ -134,17 +129,6 @@ namespace BlogWithMyPrincess.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BlogWithMyPrincess.Entities.Post", b =>
-                {
-                    b.HasOne("BlogWithMyPrincess.Entities.User", "UserParent")
-                        .WithMany("PostList")
-                        .HasForeignKey("userId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("UserParent");
-                });
-
             modelBuilder.Entity("BlogWithMyPrincess.Entities.Comments", b =>
                 {
                     b.Navigation("Replies");
@@ -158,8 +142,6 @@ namespace BlogWithMyPrincess.Migrations
             modelBuilder.Entity("BlogWithMyPrincess.Entities.User", b =>
                 {
                     b.Navigation("CommentsList");
-
-                    b.Navigation("PostList");
                 });
 #pragma warning restore 612, 618
         }

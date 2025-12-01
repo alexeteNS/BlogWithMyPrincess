@@ -4,6 +4,7 @@ using BlogWithMyPrincess.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogWithMyPrincess.Migrations
 {
     [DbContext(typeof(BlogDbContext))]
-    partial class BlogDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251130025919_Actualizamos los ocmentarios")]
+    partial class Actualizamoslosocmentarios
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -137,7 +140,7 @@ namespace BlogWithMyPrincess.Migrations
             modelBuilder.Entity("BlogWithMyPrincess.Entities.Post", b =>
                 {
                     b.HasOne("BlogWithMyPrincess.Entities.User", "UserParent")
-                        .WithMany("PostList")
+                        .WithMany()
                         .HasForeignKey("userId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -158,8 +161,6 @@ namespace BlogWithMyPrincess.Migrations
             modelBuilder.Entity("BlogWithMyPrincess.Entities.User", b =>
                 {
                     b.Navigation("CommentsList");
-
-                    b.Navigation("PostList");
                 });
 #pragma warning restore 612, 618
         }

@@ -13,12 +13,12 @@ public class CommentsRepository : ICommentsRepository
         _context = context;
     }
     
-    public async Task<bool> CreateComment(Comments? comment)
+    public async Task<Comments?> CreateComment(Comments? comment)
     {
-        if (comment == null) return false;
+        if (comment == null) return null;
         await _context.Comments.AddAsync(comment);
         await _context.SaveChangesAsync();
-        return true;
+        return comment;
     }
 
     public async Task<bool> DeleteComment(int commentId)
@@ -31,7 +31,7 @@ public class CommentsRepository : ICommentsRepository
         return true;
     }
 
-    public async Task<Comments?> UpdateComment(int commentId, string newText)
+    public async Task<Comments?> EditComment(int commentId, string newText)
     {
         var comment = await _context.Comments.FindAsync(commentId);
         if (comment == null) return null;
@@ -46,14 +46,12 @@ public class CommentsRepository : ICommentsRepository
             .Where(c => c.IdCommentParent == id)
             .ToListAsync();
     }
-
     public async Task<List<Comments>> GetCommentsByPostId(int id)
     {
-        Post? post = await _context.Posts
-            .Include(a => a.Comments)
-            .FirstOrDefaultAsync(a => a.Id == id);
-        if (post == null) return new List<Comments>();
+        var post = await _context.Posts
+            .Include(p => p.Comments)
+            .FirstOrDefaultAsync(p => p.Id == id);
 
-        return post.Comments;
+        return post?.Comments ?? new List<Comments>();
     }
 }

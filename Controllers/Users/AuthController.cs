@@ -18,7 +18,7 @@ public class AuthController : ControllerBase
     [HttpGet("loginWithAuth")]
     public async Task<IActionResult> LoginWithAuth()
     {
-        
+           
         return Ok();
     }
     
