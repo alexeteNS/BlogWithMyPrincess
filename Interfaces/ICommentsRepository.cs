@@ -9,4 +9,5 @@ public interface ICommentsRepository
     public Task<Comments?> EditComment(int commentId, string newText);
     public Task<List<Comments>> GetCommentsByCommentId(int id);
     public Task<List<Comments>> GetCommentsByPostId(int id);
+    public Task<List<Comments>> GetCommentByUserId(int id);
 }

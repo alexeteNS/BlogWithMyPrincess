@@ -5,7 +5,7 @@
 namespace BlogWithMyPrincess.Migrations
 {
     /// <inheritdoc />
-    public partial class reparandoerrores : Migration
+    public partial class borramoslaslistasdelosusuarios : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

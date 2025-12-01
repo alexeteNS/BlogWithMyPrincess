@@ -44,6 +44,11 @@ public class CommentServices : ICommentsServices
         return await _commentsRepository.GetCommentsByCommentId(id);
     }
 
+    public async Task<List<Comments>> GetCommentByUserId(int id)
+    {
+        return await _commentsRepository.GetCommentByUserId(id);
+    }
+
     public async Task<List<Comments>> GetCommentsByPostId(int id)
     {
         return await _commentsRepository.GetCommentsByPostId(id);

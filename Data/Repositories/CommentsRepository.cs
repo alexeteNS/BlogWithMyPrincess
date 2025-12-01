@@ -71,4 +71,9 @@ public class CommentsRepository : ICommentsRepository
             .Where(c => c.IdPost == id && c.IdCommentParent == null) // SOLO comentarios raíz del post
             .ToListAsync();
     }
+
+    public async Task<List<Comments>> GetCommentByUserId(int id)
+    {
+        return await _context.Comments.Where(c => c.UserId == id).ToListAsync();
+    }
 }

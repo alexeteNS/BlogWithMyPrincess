@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogWithMyPrincess.Migrations
 {
     [DbContext(typeof(BlogDbContext))]
-    [Migration("20251201044129_actualizamos al usuario para post")]
-    partial class actualizamosalusuarioparapost
+    [Migration("20251201071608_borramos las listas de los usuarios")]
+    partial class borramoslaslistasdelosusuarios
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,7 +42,7 @@ namespace BlogWithMyPrincess.Migrations
                     b.Property<int?>("IdPost")
                         .HasColumnType("int");
 
-                    b.Property<string>("Image")
+                    b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Reaccion")
@@ -72,6 +72,18 @@ namespace BlogWithMyPrincess.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Reaccion")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("userId")
                         .HasColumnType("int");
@@ -118,14 +130,16 @@ namespace BlogWithMyPrincess.Migrations
                 {
                     b.HasOne("BlogWithMyPrincess.Entities.Comments", "CommentParent")
                         .WithMany("Replies")
-                        .HasForeignKey("IdCommentParent");
+                        .HasForeignKey("IdCommentParent")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("BlogWithMyPrincess.Entities.Post", "Post")
                         .WithMany("Comments")
-                        .HasForeignKey("IdPost");
+                        .HasForeignKey("IdPost")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("BlogWithMyPrincess.Entities.User", "User")
-                        .WithMany("CommentsList")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -140,7 +154,7 @@ namespace BlogWithMyPrincess.Migrations
             modelBuilder.Entity("BlogWithMyPrincess.Entities.Post", b =>
                 {
                     b.HasOne("BlogWithMyPrincess.Entities.User", "UserParent")
-                        .WithMany("PostList")
+                        .WithMany()
                         .HasForeignKey("userId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -156,13 +170,6 @@ namespace BlogWithMyPrincess.Migrations
             modelBuilder.Entity("BlogWithMyPrincess.Entities.Post", b =>
                 {
                     b.Navigation("Comments");
-                });
-
-            modelBuilder.Entity("BlogWithMyPrincess.Entities.User", b =>
-                {
-                    b.Navigation("CommentsList");
-
-                    b.Navigation("PostList");
                 });
 #pragma warning restore 612, 618
         }

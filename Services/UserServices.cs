@@ -1,3 +1,4 @@
+using BlogWithMyPrincess.Dtos.Users;
 using BlogWithMyPrincess.Entities;
 using BlogWithMyPrincess.Interfaces;
 using BlogWithMyPrincess.Helpers;
@@ -8,10 +9,14 @@ public class UserServices : IUserServices
 {
     
     private readonly IUserRepository _userRepository;
+    private readonly ICommentsServices _commentsServices;
+    private readonly IPostRepository _postRepository;
 
-    public UserServices(IUserRepository userRepository)
+    public UserServices(IUserRepository userRepository,  ICommentsServices commentsServices,  IPostRepository postRepository)
     {
         _userRepository = userRepository;
+        _commentsServices = commentsServices;
+        _postRepository = postRepository;
     }
     
     public async Task<User?> CreateUser(string username, string password, string email)
@@ -48,14 +53,70 @@ public class UserServices : IUserServices
 
     }
 
-    public async Task<User?> GetUserByEmail(string email)
+    public async Task<BackUser?> GetUserByEmail(string email)
     {
-        return await  _userRepository.GetUserByEmail(email);
+        var user = await _userRepository.GetUserByEmail(email);
+        if (user == null) return null;
+
+        var comment = await _commentsServices.GetCommentByUserId(user.Id);
+        var post = await _postRepository.GetAllPostsByAuthor(user.Id);
+        
+        BackUser bUser = new BackUser
+        {
+            email = user.Email,
+            username = user.Username,
+            password = user.PasswordHash,
+            comments = comment.Select(p => new BackComments{
+                Id = p.Id,
+                commentId = p.IdCommentParent,
+                postId = p.IdPost,
+                Content = p.Text,
+                ImageUrl = p.ImageUrl,
+                Time = p.DateCreated
+            }).ToList(),
+            posts = post.Select(p => new BackPost
+            {
+                Id = p.Id,
+                Content = p.Text,
+                ImageUrl =  p.ImageUrl,
+                Time = p.DateCreated
+            }).ToList()
+        };
+        
+        return bUser;
     }
 
-    public async Task<User?> GetUserByUId(int id)
+    public async Task<BackUser?> GetUserByUId(int id)
     {
-        return await _userRepository.GetUserByUId(id);
+        var user = await _userRepository.GetUserByUId(id);
+        if (user == null) return null;
+
+        var comment = await _commentsServices.GetCommentByUserId(id);
+        var post = await _postRepository.GetAllPostsByAuthor(id);
+        
+        BackUser bUser = new BackUser
+        {
+            email = user.Email,
+            username = user.Username,
+            password = user.PasswordHash,
+            comments = comment.Select(p => new BackComments{
+                Id = p.Id,
+                commentId = p.IdCommentParent,
+                postId = p.IdPost,
+                Content = p.Text,
+                ImageUrl = p.ImageUrl,
+                Time = p.DateCreated
+            }).ToList(),
+            posts = post.Select(p => new BackPost
+            {
+                Id = p.Id,
+                Content = p.Text,
+                ImageUrl =  p.ImageUrl,
+                Time = p.DateCreated
+            }).ToList()
+        };
+        
+        return bUser;
     }
 
     public async Task<bool> UpdateEmail(int idUser, string email)

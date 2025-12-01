@@ -128,15 +128,15 @@ namespace BlogWithMyPrincess.Migrations
                     b.HasOne("BlogWithMyPrincess.Entities.Comments", "CommentParent")
                         .WithMany("Replies")
                         .HasForeignKey("IdCommentParent")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("BlogWithMyPrincess.Entities.Post", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("IdPost")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("BlogWithMyPrincess.Entities.User", "User")
-                        .WithMany("CommentsList")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -151,7 +151,7 @@ namespace BlogWithMyPrincess.Migrations
             modelBuilder.Entity("BlogWithMyPrincess.Entities.Post", b =>
                 {
                     b.HasOne("BlogWithMyPrincess.Entities.User", "UserParent")
-                        .WithMany("PostList")
+                        .WithMany()
                         .HasForeignKey("userId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -167,13 +167,6 @@ namespace BlogWithMyPrincess.Migrations
             modelBuilder.Entity("BlogWithMyPrincess.Entities.Post", b =>
                 {
                     b.Navigation("Comments");
-                });
-
-            modelBuilder.Entity("BlogWithMyPrincess.Entities.User", b =>
-                {
-                    b.Navigation("CommentsList");
-
-                    b.Navigation("PostList");
                 });
 #pragma warning restore 612, 618
         }
