@@ -48,10 +48,8 @@ public class CommentsRepository : ICommentsRepository
     }
     public async Task<List<Comments>> GetCommentsByPostId(int id)
     {
-        var post = await _context.Posts
-            .Include(p => p.Comments)
-            .FirstOrDefaultAsync(p => p.Id == id);
-
-        return post?.Comments ?? new List<Comments>();
+        return await _context.Comments
+            .Where(c => c.IdPost == id && c.IdCommentParent == null) // SOLO comentarios raíz del post
+            .ToListAsync();
     }
 }

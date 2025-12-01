@@ -18,7 +18,7 @@ public class CommentController : ControllerBase
     [HttpPost("create")]
     public async Task<IActionResult> CreateComment([FromBody] CreateComment dto)
     {
-        var comment = await _commentsServices.CreateComment(dto.Content, dto.PostId, dto.CommentId, dto.Image, dto.UserId);
+        var comment = await _commentsServices.CreateComment(dto.Content, dto.PostId, dto.CommentId, dto.ImageUrl, dto.UserId);
         if(comment == null) return BadRequest("Comentario no creado");
         return Ok(comment);
     }

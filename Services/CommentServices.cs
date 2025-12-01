@@ -22,7 +22,7 @@ public class CommentServices : ICommentsServices
             Text =  content,
             IdPost = idPost,
             IdCommentParent =  idComment,
-            Image = image,
+            ImageUrl = image,
             UserId =  userId
         };
         

@@ -14,6 +14,8 @@ builder.Services.AddScoped<ICommentsServices, CommentServices>();
 builder.Services.AddScoped<ICommentsRepository, CommentsRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserServices, UserServices>();
+builder.Services.AddScoped<IPostRepository, PostsRepository>();
+builder.Services.AddScoped<IPostService, PostService>();
 //Agregar CORS
 builder.Services.AddCors((options =>
 {
