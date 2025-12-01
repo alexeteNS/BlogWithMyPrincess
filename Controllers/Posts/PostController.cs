@@ -21,4 +21,20 @@ public class PostController : ControllerBase
         if (post == null) return BadRequest("No se pudo crear el post");
         return Ok("Post creado");
     }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetPost(int id)
+    {
+        var post =await _postService.GetPostById(id);
+        if (post == null) return BadRequest("No se pudo obtener el post");
+        return Ok(post);
+    }
+
+    [HttpPatch("edit")]
+    public async Task<IActionResult> UpdatePost(int id, [FromBody] PostUpdate dto)
+    {
+        var post = await _postService.UpdatePost(dto.Content, dto.ImageUrl, dto.PostId);
+        if (post == null) return BadRequest("No se pudo actualizar el post");
+        return Ok(post);
+    }
 }

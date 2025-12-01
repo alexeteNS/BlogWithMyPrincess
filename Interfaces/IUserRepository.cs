@@ -6,6 +6,7 @@ public interface IUserRepository
 {
     public Task<User?> CreateUser(User user);
     public Task<User?> LoginUser(string email, string password);
+    public Task<User?> LoginUserWithToken(int id);
     public Task<User?> GetUserByEmail(string email);
     public Task<User?> GetUserByUId(int id);
     public Task<bool> UpdateEmail(int idUser, string email);

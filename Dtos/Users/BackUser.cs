@@ -2,8 +2,8 @@ namespace BlogWithMyPrincess.Dtos.Users;
 
 public class BackUser
 {
+    public int userId { get; set; }
     public string username { get; set; }
-    public string password { get; set; }
     public string email { get; set; }
 
     public List<BackComments> comments { get; set; } = new();

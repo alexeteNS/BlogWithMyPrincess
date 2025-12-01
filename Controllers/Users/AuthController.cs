@@ -1,5 +1,7 @@
+using System.Security.Claims;
 using BlogWithMyPrincess.Dtos.Users;
 using BlogWithMyPrincess.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogWithMyPrincess.Controllers.Users;
@@ -14,15 +16,18 @@ public class AuthController : ControllerBase
     {
         _userService = userService;
     }
-
+    
+    [Authorize]
     [HttpGet("loginWithAuth")]
     public async Task<IActionResult> LoginWithAuth()
     {
-           
-        return Ok();
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+        var user = await _userService.LoginUserWithToken(userId);
+    
+        return Ok(user);
     }
     
-    [HttpGet("/loginWithData")]
+    [HttpPost("loginWithData")]
     public async Task<IActionResult>  LoginWithData ([FromBody] Login Dto)
     {
         var user = await _userService.LoginUser(Dto.Email, Dto.Password);
@@ -33,7 +38,7 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> CreateUser([FromBody] Register Dto)
     {
-        var user = await _userService.CreateUser(Dto.Username, Dto.Password, Dto.Email);
+        var user = await _userService.CreateUser(Dto.Username, Dto.Password, Dto.Email); 
         if (user == null) return BadRequest("No se pudo crear el usuario");
         return Ok(user);
     }

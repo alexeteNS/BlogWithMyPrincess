@@ -1,4 +1,7 @@
-using BlogWithMyPrincess.Data.Context;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
 using BlogWithMyPrincess.Interfaces;
 using BlogWithMyPrincess.Entities;
 using BlogWithMyPrincess.Helpers;
@@ -32,6 +35,13 @@ public class UserRepository : IUserRepository
         if (user == null) return null;
         if(user.isDeleted) return null;
         return !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash) ? null : user;
+    }
+
+    public async Task<User?> LoginUserWithToken(int id)
+    {
+        //Verificar si el usuario existe y devolverlo
+        var user = await _context.Users.FindAsync(id);
+        return user?.isDeleted == false ? user : null;
     }
 
     public async Task<User?> GetUserByEmail(string email)

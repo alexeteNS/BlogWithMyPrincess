@@ -5,8 +5,9 @@ namespace BlogWithMyPrincess.Interfaces;
 
 public interface IUserServices
 {
-    public Task<User?> CreateUser(string username, string password, string email);
-    public Task<User?> LoginUser(string email, string password);
+    public Task<UserToken?> CreateUser(string username, string password, string email);
+    public Task<UserToken?> LoginUser(string email, string password);
+    public Task<UserInfo?> LoginUserWithToken(int id);
     public Task<BackUser> GetUserByEmail(string email);
     public Task<BackUser> GetUserByUId(int id);
     public Task<bool> UpdateEmail(int idUser, string email);

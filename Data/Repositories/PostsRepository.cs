@@ -29,6 +29,12 @@ public class PostsRepository : IPostRepository
         await _context.SaveChangesAsync();
         return post;
     }
+    public async Task<Post> GetCompletePostById(int postId)
+    {
+        var post = await _context.Posts.FindAsync(postId);
+        if (post == null) return null;
+        return post;
+    }
 
     public async Task<Post> GetPostById(int id)
     {

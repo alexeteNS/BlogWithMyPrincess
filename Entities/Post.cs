@@ -8,7 +8,8 @@ public class Post
     public string? Text { get; set; } = string.Empty;
     public string? ImageUrl { get; set; } = string.Empty;
     public DateTime DateCreated { get; set; } = DateTime.UtcNow;
-    public Reaccion Reaccion { get; set; }
+    public int? dislikes { get; set; } = 0;
+    public int? likes { get; set; } = 0;
     public List<Comments> Comments { get; set; } = new();
     public int userId { get; set; }
     [ForeignKey(nameof(userId))]

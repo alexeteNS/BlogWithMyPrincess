@@ -19,7 +19,7 @@ public class UserServices : IUserServices
         _postRepository = postRepository;
     }
     
-    public async Task<User?> CreateUser(string username, string password, string email)
+    public async Task<UserToken?> CreateUser(string username, string password, string email)
     {
         //Verificamos que no haga falta ningun dato
         if(string.IsNullOrWhiteSpace(username)||  
@@ -41,16 +41,59 @@ public class UserServices : IUserServices
         newUser.Email = checker.Email;
         
         //Lo aguardamos en la base de datos
-        return await _userRepository.CreateUser(newUser);   
+        var user = await _userRepository.CreateUser(newUser);   
+        if (user == null) return null;
+        var token = GenerateJwtToken.Generate(user);
+
+        return new UserToken
+        {
+            Token = token,
+            User = new UserInfo
+            {
+                UserId = user.Id,
+                Username = user.Username,
+                Email = user.Email
+            }
+        };
     }
 
-    public async Task<User?> LoginUser(string email, string password)
+    public async Task<UserToken?> LoginUser(string email, string password)
     {
         //Verificamos que no haga falta ningun dato
         if(string.IsNullOrWhiteSpace(password)||
            string.IsNullOrWhiteSpace(email)) return null;
-        return await _userRepository.LoginUser(email, password);
+        var user = await _userRepository.LoginUser(email, password);
+        if (user == null) return null;
 
+        var token = GenerateJwtToken.Generate(user);
+
+        return new UserToken
+        {
+            Token = token,
+            User = new UserInfo
+            {
+                UserId = user.Id,
+                Username = user.Username,
+                Email = user.Email
+            }
+        };
+
+    }
+
+    public async Task<UserInfo?> LoginUserWithToken(int id)
+    {
+        var user = await _userRepository.LoginUserWithToken(id);
+        if (user == null) return null;
+        
+        var token = GenerateJwtToken.Generate(user);
+        
+        return new 
+            UserInfo
+            {
+                UserId = user.Id,
+                Username = user.Username,
+                Email = user.Email
+            };
     }
 
     public async Task<BackUser?> GetUserByEmail(string email)
@@ -63,9 +106,9 @@ public class UserServices : IUserServices
         
         BackUser bUser = new BackUser
         {
+            userId =  user.Id,
             email = user.Email,
             username = user.Username,
-            password = user.PasswordHash,
             comments = comment.Select(p => new BackComments{
                 Id = p.Id,
                 commentId = p.IdCommentParent,
@@ -96,9 +139,9 @@ public class UserServices : IUserServices
         
         BackUser bUser = new BackUser
         {
+            userId = user.Id,
             email = user.Email,
             username = user.Username,
-            password = user.PasswordHash,
             comments = comment.Select(p => new BackComments{
                 Id = p.Id,
                 commentId = p.IdCommentParent,
