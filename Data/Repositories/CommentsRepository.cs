@@ -23,14 +23,33 @@ public class CommentsRepository : ICommentsRepository
 
     public async Task<bool> DeleteComment(int commentId)
     {
-        var comment = await _context.Comments.FindAsync(commentId);
-        if (comment == null) return false;
+        var comment = await _context.Comments
+            .Include(c => c.Replies)
+            .FirstOrDefaultAsync(c => c.Id == commentId);
 
-        _context.Comments.Remove(comment);
+        if (comment == null) return false;
+        
+        await DeleteChildren(comment.Id);
+
+       _context.Comments.Remove(comment);
         await _context.SaveChangesAsync();
+
         return true;
     }
+        
+    private async Task DeleteChildren(int commentId)
+    {
+        var children = await _context.Comments
+            .Where(c => c.IdCommentParent == commentId)
+            .ToListAsync();
 
+        foreach (var child in children)
+        {
+            await DeleteChildren(child.Id);
+            _context.Comments.Remove(child);
+        }
+    }
+    
     public async Task<Comments?> EditComment(int commentId, string newText)
     {
         var comment = await _context.Comments.FindAsync(commentId);

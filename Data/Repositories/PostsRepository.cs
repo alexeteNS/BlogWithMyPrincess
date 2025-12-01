@@ -54,9 +54,31 @@ public class PostsRepository : IPostRepository
         var post = await _context.Posts.FindAsync(id);
         if (post == null) return false;
         
+        var rootComments = await _context.Comments
+            .Where(c => c.IdPost == id && c.IdCommentParent == null)
+            .ToListAsync();
+        
+        foreach (var comment in rootComments)
+        {
+            await DeleteCommentTree(comment.Id);
+        }
+        
         _context.Posts.Remove(post);
         await _context.SaveChangesAsync();
-        
+
         return true;
+    }
+    
+    private async Task DeleteCommentTree(int commentId)
+    {
+        var children = await _context.Comments
+            .Where(c => c.IdCommentParent == commentId)
+            .ToListAsync();
+
+        foreach (var child in children)
+        {
+            await DeleteCommentTree(child.Id);
+            _context.Comments.Remove(child);
+        }
     }
 }

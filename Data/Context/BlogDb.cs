@@ -16,13 +16,13 @@ public class BlogDbContext : DbContext, IBlogDbContext
             .HasMany(p => p.Comments)
             .WithOne(c => c.Post)
             .HasForeignKey(c => c.IdPost)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
         
         modelBuilder.Entity<Comments>()
             .HasMany(c => c.Replies)
             .WithOne(r => r.CommentParent)
             .HasForeignKey(r => r.IdCommentParent)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
     }
     
     public DbSet<User> Users { get; set; }
