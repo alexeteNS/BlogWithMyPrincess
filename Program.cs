@@ -57,6 +57,7 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
+app.UseRouting();
 app.UseCors("CorePolicy");
 app.MapControllers();
 app.UseAuthentication();

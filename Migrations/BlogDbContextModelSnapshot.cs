@@ -76,11 +76,14 @@ namespace BlogWithMyPrincess.Migrations
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Reaccion")
-                        .HasColumnType("int");
-
                     b.Property<string>("Text")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("dislikes")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("likes")
+                        .HasColumnType("int");
 
                     b.Property<int>("userId")
                         .HasColumnType("int");
