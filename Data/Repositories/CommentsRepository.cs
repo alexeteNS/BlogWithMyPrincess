@@ -1,3 +1,5 @@
+using BlogWithMyPrincess.Dtos.Comment;
+using BlogWithMyPrincess.Dtos.Users;
 using BlogWithMyPrincess.Entities;
 using BlogWithMyPrincess.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +15,24 @@ public class CommentsRepository : ICommentsRepository
         _context = context;
     }
     
-    public async Task<Comments?> CreateComment(Comments? comment)
+    public async Task<BackComment?> CreateComment(Comments? comment)
     {
         if (comment == null) return null;
         await _context.Comments.AddAsync(comment);
         await _context.SaveChangesAsync();
-        return comment;
+        return new BackComment
+        {
+            Id = comment.Id,
+            Text =  comment.Text,
+            ImageUrl =  comment.ImageUrl,
+            DateCreated =  comment.DateCreated,
+            dislikes = comment.dislikes,
+            likes = comment.likes,
+            UserId = comment.UserId,
+            postId = comment.IdPost,
+            commentId = comment.IdCommentParent,
+            
+        };
     }
 
     public async Task<bool> DeleteComment(int commentId)
@@ -50,30 +64,73 @@ public class CommentsRepository : ICommentsRepository
         }
     }
     
-    public async Task<Comments?> EditComment(int commentId, string newText)
+    public async Task<BackComment?> EditComment(int commentId, string newText)
     {
         var comment = await _context.Comments.FindAsync(commentId);
         if (comment == null) return null;
         comment.Text = newText;
         await _context.SaveChangesAsync();
-        return comment;
+        return new BackComment
+        {
+            Id = comment.Id,
+            Text =  comment.Text,
+            ImageUrl =  comment.ImageUrl,
+            DateCreated =  comment.DateCreated,
+            dislikes = comment.dislikes,
+            likes = comment.likes,
+            UserId = comment.UserId,
+            postId = comment.IdPost,
+            commentId = comment.IdCommentParent,
+            
+        };;
     }
 
-    public async Task<List<Comments>> GetCommentsByCommentId(int id)
+    public async Task<List<BackComment>> GetCommentsByCommentId(int id)
     {
         return await _context.Comments
-            .Where(c => c.IdCommentParent == id)
-            .ToListAsync();
+            .Where(c => c.IdCommentParent == id && c.IdPost == null).Select(c => new BackComment
+            {
+                    Id = c.Id,
+                    Text =  c.Text,
+                    ImageUrl =  c.ImageUrl,
+                    DateCreated =  c.DateCreated,
+                    dislikes = c.dislikes,
+                    likes = c.likes,
+                    UserId = c.UserId,
+                    postId = c.IdPost,
+                    commentId = c.IdCommentParent,
+            }).ToListAsync();
     }
-    public async Task<List<Comments>> GetCommentsByPostId(int id)
+    public async Task<List<BackComment>> GetCommentsByPostId(int id)
     {
         return await _context.Comments
-            .Where(c => c.IdPost == id && c.IdCommentParent == null) // SOLO comentarios raíz del post
-            .ToListAsync();
+            .Where(c => c.IdPost == id && c.IdCommentParent == null).Select(c => new BackComment
+            {
+                Id = c.Id,
+                Text =  c.Text,
+                ImageUrl =  c.ImageUrl,
+                DateCreated =  c.DateCreated,
+                dislikes = c.dislikes,
+                likes = c.likes,
+                UserId = c.UserId,
+                postId = c.IdPost,
+                commentId = c.IdCommentParent,
+            }).ToListAsync();
     }
 
-    public async Task<List<Comments>> GetCommentByUserId(int id)
+    public async Task<List<BackComment>> GetCommentByUserId(int id)
     {
-        return await _context.Comments.Where(c => c.UserId == id).ToListAsync();
+        return await _context.Comments.Where(c => c.UserId == id).Select(c => new BackComment
+        {
+            Id = c.Id,
+            Text =  c.Text,
+            ImageUrl =  c.ImageUrl,
+            DateCreated =  c.DateCreated,
+            dislikes = c.dislikes,
+            likes = c.likes,
+            UserId = c.UserId,
+            postId = c.IdPost,
+            commentId = c.IdCommentParent,
+        }).ToListAsync();
     }
 }

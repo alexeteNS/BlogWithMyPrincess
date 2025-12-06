@@ -1,3 +1,4 @@
+using BlogWithMyPrincess.Dtos.Comment;
 using BlogWithMyPrincess.Entities;
 using BlogWithMyPrincess.Interfaces;
 
@@ -12,7 +13,7 @@ public class CommentServices : ICommentsServices
         _commentsRepository = commentsRepository;
     }
     
-    public async Task<Comments?> CreateComment(string content, int? idPost, int? idComment, string? image, int userId)
+    public async Task<BackComment?> CreateComment(string content, int? idPost, int? idComment, string? image, int userId)
     {
         if(idPost == null && idComment == null) return null;
         if (idPost != null && idComment != null) return null;
@@ -23,7 +24,9 @@ public class CommentServices : ICommentsServices
             IdPost = idPost,
             IdCommentParent =  idComment,
             ImageUrl = image,
-            UserId =  userId
+            UserId =  userId,
+            dislikes = 0,
+            likes = 0,
         };
         
         return await _commentsRepository.CreateComment(comments);
@@ -34,22 +37,22 @@ public class CommentServices : ICommentsServices
         return await _commentsRepository.DeleteComment(commentId);
     }
 
-    public async Task<Comments?> EditComment(int commentId, string newText)
+    public async Task<BackComment?> EditComment(int commentId, string newText)
     {
         return await _commentsRepository.EditComment(commentId, newText);
     }
 
-    public async Task<List<Comments>> GetCommentsByCommentId(int id)
+    public async Task<List<BackComment>> GetCommentsByCommentId(int id)
     {
         return await _commentsRepository.GetCommentsByCommentId(id);
     }
 
-    public async Task<List<Comments>> GetCommentByUserId(int id)
+    public async Task<List<BackComment>> GetCommentByUserId(int id)
     {
         return await _commentsRepository.GetCommentByUserId(id);
     }
 
-    public async Task<List<Comments>> GetCommentsByPostId(int id)
+    public async Task<List<BackComment>> GetCommentsByPostId(int id)
     {
         return await _commentsRepository.GetCommentsByPostId(id);
     }

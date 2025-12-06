@@ -111,8 +111,8 @@ public class UserServices : IUserServices
             username = user.Username,
             comments = comment.Select(p => new BackComments{
                 Id = p.Id,
-                commentId = p.IdCommentParent,
-                postId = p.IdPost,
+                commentId = p.commentId,
+                postId = p.postId,
                 Content = p.Text,
                 ImageUrl = p.ImageUrl,
                 Time = p.DateCreated
@@ -144,8 +144,8 @@ public class UserServices : IUserServices
             username = user.Username,
             comments = comment.Select(p => new BackComments{
                 Id = p.Id,
-                commentId = p.IdCommentParent,
-                postId = p.IdPost,
+                commentId = p.commentId,
+                postId = p.postId,
                 Content = p.Text,
                 ImageUrl = p.ImageUrl,
                 Time = p.DateCreated

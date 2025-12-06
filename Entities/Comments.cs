@@ -8,7 +8,8 @@ public class Comments
     public string? Text { get; set; } = string.Empty;
     public string? ImageUrl { get; set; } = string.Empty;
     public DateTime DateCreated { get; set; } = DateTime.UtcNow;
-    public Reaccion Reaccion { get; set; }
+    public int dislikes { get; set; } = 0;
+    public int likes { get; set; } = 0;
     
     public int? IdCommentParent { get; set; }
     [ForeignKey(nameof(IdCommentParent))]
@@ -22,9 +23,4 @@ public class Comments
     public int UserId { get; set; }
     [ForeignKey(nameof(UserId))]
     public User User { get; set; } = null!;
-}
-public enum Reaccion
-{
-    MeGusta = 0,
-    NoMeGusta = 0
 }
